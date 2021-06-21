@@ -1,0 +1,14 @@
+stages:
+  - deploy
+deploy_production2:
+  stage: deploy
+  script:
+    - rsync -avzP * /opt/mobile/ --no-perms --no-owner --no-group
+    - cd /opt/mobile/ && ls -l
+    - ./gradlew build
+    - cp build/libs/mobile.gtw.war ../webcontent
+    - systemctl restart epay
+  environment:
+    name: production2
+  only:
+    - master
