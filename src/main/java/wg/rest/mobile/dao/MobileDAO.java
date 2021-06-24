@@ -12,6 +12,6 @@ import java.sql.SQLException;
  */
 public interface MobileDAO {
 
-    JSONObject make_request(String reqUUID, String ctlUID, String lang, String pMap)
+    Object make_request(String reqUUID, String ctlUID, String lang, String pMap)
             throws JSONException, EpayException, IOException, SQLException;
 }

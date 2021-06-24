@@ -1,6 +1,7 @@
 package wg.rest.mobile.dao;
 
 import org.apache.commons.io.IOUtils;
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ public class MobileDAO_Impl implements MobileDAO {
     private SimpleJdbcCall func;
 
     @Override
-    public JSONObject make_request(String reqUUID, String ctlUID, String lang,String pMap)
+    public Object make_request(String reqUUID, String ctlUID, String lang,String pMap)
             throws JSONException, EpayException, IOException, SQLException {
 
         Map inParams = new HashMap();
@@ -67,8 +68,13 @@ public class MobileDAO_Impl implements MobileDAO {
         StringWriter w = new StringWriter();
         IOUtils.copy(in, w);
 
-        JSONObject jsonObject = new JSONObject(w.toString());
+        String result = w.toString();
+        if (result.startsWith("[")) {
+            JSONArray jsonArray = new JSONArray(result);
+            return jsonArray;
+        }
 
+        JSONObject jsonObject = new JSONObject(w.toString());
 
         return jsonObject;
     }

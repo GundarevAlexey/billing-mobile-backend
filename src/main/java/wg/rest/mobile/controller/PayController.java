@@ -67,7 +67,7 @@ public class PayController {
             String requestIP = (requestContext.getHeader("X-FORWARDED-FOR")!=null?
                     requestContext.getHeader("X-REAL-IP"):requestContext.getRemoteAddr());
 
-            JSONObject jsonObject = dao.make_request(reqUUID, ctlUID, "ru", converter.getPMap(requestContext));
+            Object jsonObject = dao.make_request(reqUUID, ctlUID, "ru", converter.getPMap(requestContext));
             return Response.status(Response.Status.OK).entity(jsonObject.toString()).build();
         } catch (EpayException ex) {
             return Response.status(Response.Status.BAD_REQUEST).entity(ex.getErrObj().toString()).build();
