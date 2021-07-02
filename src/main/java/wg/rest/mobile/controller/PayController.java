@@ -1,5 +1,8 @@
 package wg.rest.mobile.controller;
 
+import com.apus.st.STWSStub;
+import com.apus.st.Test;
+import org.apache.axis2.AxisFault;
 import org.codehaus.jettison.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,6 +20,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,7 +39,16 @@ public class PayController {
     private MobileDAO dao;
 
     @GET
-    public Response index(){
+    public Response index() throws RemoteException {
+        STWSStub st = new STWSStub();
+        Test t = new Test();
+        Test.TestRequest testRequest = new Test.TestRequest();
+        testRequest.setLang("en");
+        testRequest.setPhoneNumber("997961883");
+        testRequest.setStPimsApiPartnerKey("2A084E55C87B1EBCDAAD1F62FDBBAC8E");
+        testRequest.setVersion("1");
+        t.setTestRequest(testRequest);
+        st.test(t);
         return Response.ok().build();
     }
 

@@ -1,8 +1,6 @@
 
 package com.apus.st;
 
-import wg.rest.mobile.services.upay.UpayConst;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import javax.xml.namespace.QName;
@@ -19,7 +17,7 @@ import javax.xml.ws.WebServiceFeature;
  * Generated source version: 2.2
  * 
  */
-@WebServiceClient(name = "STWS", targetNamespace = "http://st.apus.com/", wsdlLocation = "https://api.upay.uz/STAPI/STWS?wsdl")
+@WebServiceClient(name = "STWS", targetNamespace = "http://st.apus.com/", wsdlLocation = "file:/Users/jaloliddin/Projects/integration_wc/mobile/wsdl/STWS.wsdl")
 public class STWS_Service
     extends Service
 {
@@ -32,7 +30,7 @@ public class STWS_Service
         URL url = null;
         WebServiceException e = null;
         try {
-            url = new URL("https://api.upay.uz/STAPI/STWS?wsdl");
+            url = new URL("file:/Users/jaloliddin/Projects/integration_wc/mobile/wsdl/STWS.wsdl");
         } catch (MalformedURLException ex) {
             e = new WebServiceException(ex);
         }
