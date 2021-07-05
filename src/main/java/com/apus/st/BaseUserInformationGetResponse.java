@@ -5,6 +5,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -105,12 +106,14 @@ public class BaseUserInformationGetResponse {
     @XmlElement(name = "Photo")
     protected String photo;
     @XmlElement(name = "CategoryAlign")
+    @XmlSchemaType(name = "string")
     protected CategoryAlign categoryAlign;
     @XmlElement(name = "QuickPaymentByContact")
     protected Boolean quickPaymentByContact;
     @XmlElement(name = "PushUcoins")
     protected Boolean pushUcoins;
     @XmlElement(name = "DashboardPaymentType")
+    @XmlSchemaType(name = "string")
     protected DashboardPaymentType dashboardPaymentType;
     @XmlElement(name = "HasNewVersion")
     protected Boolean hasNewVersion;

@@ -1,8 +1,5 @@
 package wg.rest.mobile.controller;
 
-import com.apus.st.STWSStub;
-import com.apus.st.Test;
-import org.apache.axis2.AxisFault;
 import org.codehaus.jettison.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -40,20 +37,8 @@ public class PayController {
 
     @GET
     public Response index() throws RemoteException {
-        STWSStub st = new STWSStub();
-        Test t = new Test();
-        Test.TestRequest testRequest = new Test.TestRequest();
-        testRequest.setLang("en");
-        testRequest.setPhoneNumber("997961883");
-        testRequest.setStPimsApiPartnerKey("2A084E55C87B1EBCDAAD1F62FDBBAC8E");
-        testRequest.setVersion("1");
-        t.setTestRequest(testRequest);
-        st.test(t);
         return Response.ok().build();
     }
-
-
-
 
     @POST
     @Path("/{type}/{token}")

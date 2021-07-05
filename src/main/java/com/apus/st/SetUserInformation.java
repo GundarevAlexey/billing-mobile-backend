@@ -173,12 +173,14 @@ public class SetUserInformation {
         @XmlElement(name = "ThemeCover")
         protected Integer themeCover;
         @XmlElement(name = "CategoryAlign")
+        @XmlSchemaType(name = "string")
         protected CategoryAlign categoryAlign;
         @XmlElement(name = "QuickPaymentByContact")
         protected Boolean quickPaymentByContact;
         @XmlElement(name = "PushUcoins")
         protected Boolean pushUcoins;
         @XmlElement(name = "DashboardPaymentType")
+        @XmlSchemaType(name = "string")
         protected DashboardPaymentType dashboardPaymentType;
         @XmlElement(name = "Version")
         protected String version;
