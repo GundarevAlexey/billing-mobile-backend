@@ -5,6 +5,9 @@ buildscript {
         maven { url "http://maven.icm.edu.pl/artifactory/repo/"}
         maven { url "https://jcenter.bintray.com/"}
         maven { url "https://repo.spring.io/libs-milestone/"}
+        maven { url "https://repo.spring.io/libs-release" }
+        mavenLocal()
+        mavenCentral()
     }
     dependencies {
         classpath "gradle.plugin.org.gretty:gretty:3.0.3"
@@ -21,19 +24,69 @@ version '1.0-SNAPSHOT'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 war.archiveName = "mobile.gtw.war"
+
+configurations {
+    jaxb
+}
+
 sourceSets {
     main {
         java { srcDirs 'src/main/java' }
         resources { srcDirs 'src/main/resources' }
     }
 }
+
 repositories {
     mavenLocal()
     mavenCentral artifactUrls: ["http://maven.icm.edu.pl/artifactory/repo/"]
+    maven { url 'https://repo.spring.io/libs-release' }
     maven { url "https://maven.xwiki.org/externals/"}
     maven { url "http://maven.icm.edu.pl/artifactory/repo/"}
     maven { url "https://jcenter.bintray.com/"}
     maven { url "https://repo.spring.io/libs-milestone/"}
+}
+
+task genJaxb {
+    ext.sourcesDir = "${buildDir}/generated/sources/jaxb"
+    ext.classesDir = "${buildDir}/classes/jaxb"
+    ext.schema = "${projectDir}/src/main/resources/STWS.xsd"
+//    ext.pack = "wg.rest.mobile.services.upay"
+
+
+    outputs.dir classesDir
+
+    doLast() {
+        project.ant {
+            // Create output directories
+            mkdir(dir: sourcesDir)
+            mkdir(dir: classesDir)
+
+            taskdef name: "xjc", classname: "com.sun.tools.xjc.XJCTask",
+                    classpath: configurations.jaxb.asPath
+
+            xjc(destdir: sourcesDir, schema: schema
+//                    ,package: pack + ".wsdl"
+            ) {
+                arg(value: "-wsdl")
+                produces(dir: sourcesDir, includes: "**/*.java")
+            }
+
+            javac(destdir: classesDir, source: 1.8, target: 1.8, debug: true,
+                    debugLevel: "lines,vars,source",
+                    includeantruntime: false,
+                    classpath: configurations.jaxb.asPath) {
+                src(path: sourcesDir)
+                include(name: "**/*.java")
+                include(name: "*.java")
+            }
+
+            copy(todir: classesDir) {
+                fileset(dir: sourcesDir, erroronmissingdir: false) {
+                    exclude(name: "**/*.java")
+                }
+            }
+        }
+    }
 }
 dependencies {
     compile group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0'
@@ -76,6 +129,18 @@ dependencies {
     compile "axis:axis-wsdl4j:1.5.1"
     compile group: 'org.springframework.ws', name: 'spring-ws-core', version: '3.1.1'
 
+    jaxb("com.sun.xml.bind:jaxb-xjc:2.2.4-1")
+    compile 'com.sun.xml.bind:jaxb-xjc:2.2.4-1'
+    compile(files(genJaxb.classesDir).builtBy(genJaxb))
+
+    implementation group: 'org.apache.ws.xmlschema', name: 'xmlschema-core', version: '2.2.5'
+
+}
+
+compileJava.dependsOn 'genJaxb'
+
+jar {
+    from genJaxb.classesDir
 }
 def debugArgs = []
 if (gradle.startParameter.initScripts) {
