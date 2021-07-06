@@ -3,8 +3,6 @@ package wg.rest.mobile.controller;
 import com.apus.st.ConfirmPayment;
 import com.apus.st.Prepayment;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,15 +29,15 @@ public class UpayController {
 
     @POST
     @Path("/prepayment")
-    public HttpEntity<?> prepayment(@RequestBody Prepayment request){
+    public Response prepayment(@RequestBody Prepayment request){
 
-        return ResponseEntity.ok(service.prepaymentResponse(request));
+        return Response.ok(service.prepaymentResponse(request)).build();
     }
     @POST
     @Path("/confirm-payment")
-    public HttpEntity<?> confirmPayment(@RequestBody ConfirmPayment request){
+    public Response confirmPayment(@RequestBody ConfirmPayment request){
 
-        return ResponseEntity.ok(service.confirmPaymentResponse(request));
+        return Response.ok(service.confirmPaymentResponse(request)).build();
     }
 
 }
