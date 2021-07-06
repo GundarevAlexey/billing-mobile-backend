@@ -32,7 +32,7 @@ public class DBConnConfig {
     public DataSource oracleDataSource() throws SQLException {
 
         HikariConfig config = new HikariConfig();
-        config.setJdbcUrl(env.getProperty("db.url"));
+        config.setJdbcUrl(env.getProperty("db.dev_url"));
         config.setUsername(env.getProperty("db.username"));
         config.setPassword(env.getProperty("db.pswd"));
 
