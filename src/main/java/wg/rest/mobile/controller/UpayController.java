@@ -1,7 +1,9 @@
 package wg.rest.mobile.controller;
 
 import com.apus.st.ConfirmPayment;
+import com.apus.st.ConfirmPaymentResponse;
 import com.apus.st.Prepayment;
+import com.apus.st.PrepaymentResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -11,6 +13,7 @@ import wg.rest.mobile.services.upay.UpayService;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.HashMap;
 
 @Controller
 @CrossOrigin
@@ -30,14 +33,24 @@ public class UpayController {
     @POST
     @Path("/prepayment")
     public Response prepayment(@RequestBody Prepayment request){
+        PrepaymentResponse prepaymentResponse = service.prepaymentResponse(request);
 
-        return Response.ok(service.prepaymentResponse(request)).build();
+        HashMap<String, Object> body = new HashMap<>();
+
+        body.put("data", prepaymentResponse.getReturn());
+
+        return Response.ok(body).build();
     }
     @POST
     @Path("/confirm-payment")
     public Response confirmPayment(@RequestBody ConfirmPayment request){
 
-        return Response.ok(service.confirmPaymentResponse(request)).build();
+        ConfirmPaymentResponse confirmPaymentResponse = service.confirmPaymentResponse(request);
+        HashMap<String, Object> body = new HashMap<>();
+
+        body.put("data", confirmPaymentResponse.getReturn());
+
+        return Response.ok(body).build();
     }
 
 }
