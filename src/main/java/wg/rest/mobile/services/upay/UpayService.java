@@ -16,7 +16,7 @@ public class UpayService {
     public PrepaymentResponse prepaymentResponse(Prepayment prepayment) {
 
         prepayment.getPrepaymentRequest().setStPimsApiPartnerKey(UpayConst.KEY);
-        prepayment.getPrepaymentRequest().setServiceId(UpayConst.SERVICE_262);
+        prepayment.getPrepaymentRequest().setServiceId(UpayConst.SERVICE_645);
         prepayment.getPrepaymentRequest().setPartnerDate(new Date().getTime());
 
         ObjectFactory obj = new ObjectFactory();
