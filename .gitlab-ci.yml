@@ -7,7 +7,7 @@ deploy_production2:
     - cd /opt/mobile/ && ls -l
     - ./gradlew build
     - cp build/libs/mobile.gtw.war ../webcontent
-    - systemctl restart epay
+    - systemctl restart webapi
   environment:
     name: production2
   only:
