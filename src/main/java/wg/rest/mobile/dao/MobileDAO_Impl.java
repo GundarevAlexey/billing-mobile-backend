@@ -4,12 +4,15 @@ import org.apache.commons.io.IOUtils;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Component;
+import wg.rest.mobile.config.filter.TokenFilter;
 import wg.rest.mobile.expt.EpayException;
 
 import java.io.IOException;
@@ -31,6 +34,8 @@ public class MobileDAO_Impl implements MobileDAO {
     @Autowired
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcCall func;
+
+    private static final Logger logger = LoggerFactory.getLogger(MobileDAO_Impl.class);
 
     @Override
     public Object make_request(String reqUUID, String ctlUID, String lang,String pMap)
@@ -59,6 +64,7 @@ public class MobileDAO_Impl implements MobileDAO {
         this.func.setReturnValueRequired(false);
         Map m = func.execute(inParams);
 
+        logger.info("request {}",inParams);
         if (Integer.parseInt(m.get("result").toString()) != 1) {
             throw new EpayException(new JSONObject(m.get("ov#errObj").toString()));
         }
