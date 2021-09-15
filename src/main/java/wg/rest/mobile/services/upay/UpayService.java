@@ -13,11 +13,22 @@ public class UpayService {
     private UpayClient client;
 
 
-    public PrepaymentResponse prepaymentResponse(Prepayment prepayment) {
+    public PrepaymentResponse prepaymentResponse(Prepayment data) {
+        Prepayment.PrepaymentRequest request = data.getPrepaymentRequest();
 
-        prepayment.getPrepaymentRequest().setStPimsApiPartnerKey(UpayConst.KEY);
-        prepayment.getPrepaymentRequest().setServiceId(UpayConst.SERVICE_645);
-        prepayment.getPrepaymentRequest().setPartnerDate(new Date().getTime());
+        Prepayment prepayment  = new Prepayment();
+        Prepayment.PrepaymentRequest prepaymentRequest = new Prepayment.PrepaymentRequest();
+
+        prepaymentRequest.setStPimsApiPartnerKey(UpayConst.KEY);
+        prepaymentRequest.setPhoneNumber(request.getPhoneNumber());
+        prepaymentRequest.setCardNumber(request.getCardNumber());
+        prepaymentRequest.setCardExpireDate(request.getCardExpireDate());
+        prepaymentRequest.setServiceId(UpayConst.SERVICE_645);
+        prepaymentRequest.setPersonalAccount(request.getPersonalAccount()+":"+request.getPaymentType()+":"+request.getPaymentDateFrom()+":"+request.getPaymentDateTo());
+        prepaymentRequest.setPaymentAmount(request.getPaymentAmount());
+        prepaymentRequest.setPartnerDate(new Date().getTime());
+
+        prepayment.setPrepaymentRequest(prepaymentRequest);
 
         ObjectFactory obj = new ObjectFactory();
         PrepaymentResponse prepaymentResponse = client.prepayment(UpayConst.WSDL_URL, obj.createPrepayment(prepayment));
