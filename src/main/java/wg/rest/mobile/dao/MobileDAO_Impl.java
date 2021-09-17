@@ -67,7 +67,6 @@ public class MobileDAO_Impl implements MobileDAO {
         this.func.setReturnValueRequired(false);
         Map m = func.execute(inParams);
 
-        logger.info("request {}",inParams);
         if (Integer.parseInt(m.get("result").toString()) != 1) {
             logger.warn("error -- {}",gson.toJson(m.get("ov#errObj")));
             throw new EpayException(new JSONObject(m.get("ov#errObj").toString()));
