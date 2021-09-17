@@ -22,6 +22,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Created by BigMan on 28.02.2019.
  */
@@ -35,6 +39,8 @@ public class PayController {
     @Autowired
     private MobileDAO dao;
 
+
+private static final Logger logger = LoggerFactory.getLogger(PayController.class);
     @GET
     public Response index() throws RemoteException {
         return Response.ok().build();

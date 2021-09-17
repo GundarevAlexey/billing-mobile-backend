@@ -74,6 +74,11 @@ public class MobileDAO_Impl implements MobileDAO {
         }
         ;
 
+        
+        if(m.get("clob#items") == null){
+            return new JSONObject("{}");
+        }
+
         Reader in = ((Clob) m.get("clob#items")).getCharacterStream();
         StringWriter w = new StringWriter();
         IOUtils.copy(in, w);
