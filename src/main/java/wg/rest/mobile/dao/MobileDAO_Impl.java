@@ -1,5 +1,6 @@
 package wg.rest.mobile.dao;
 
+import com.google.gson.Gson;
 import org.apache.commons.io.IOUtils;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
@@ -46,6 +47,8 @@ public class MobileDAO_Impl implements MobileDAO {
         inParams.put("pv#ctlUID", ctlUID);
         inParams.put("pv#lang", lang);
         inParams.put("pv#pMap", pMap);
+        Gson gson = new Gson();
+        logger.warn("request -- {}",gson.toJson(inParams));
 
         this.func = new SimpleJdbcCall(jdbcTemplate).withCatalogName(pkgName).withFunctionName("do_request")
                 .withoutProcedureColumnMetaDataAccess()
@@ -66,6 +69,7 @@ public class MobileDAO_Impl implements MobileDAO {
 
         logger.info("request {}",inParams);
         if (Integer.parseInt(m.get("result").toString()) != 1) {
+            logger.warn("error -- {}",gson.toJson(m.get("ov#errObj")));
             throw new EpayException(new JSONObject(m.get("ov#errObj").toString()));
         }
         ;
@@ -81,7 +85,7 @@ public class MobileDAO_Impl implements MobileDAO {
         }
 
         JSONObject jsonObject = new JSONObject(w.toString());
-
+        logger.warn("response -- {}",gson.toJson(jsonObject));
         return jsonObject;
     }
 
