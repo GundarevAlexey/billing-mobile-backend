@@ -12,3 +12,15 @@ deploy_production2:
     name: production2
   only:
     - master
+deploy_develop:
+  stage: deploy
+  script:
+    - rsync -avzP * /opt/dev_mobile/ --no-perms --no-owner --no-group
+    - cd /opt/dev_mobile/ && ls -l
+    - ./gradlew build
+    - cp build/libs/mobile.gtw.war ../webcontent/dev-mobile.gtw.war
+    - systemctl restart webapi
+  environment:
+    name: develop
+  only:
+    - dev
