@@ -39,7 +39,7 @@ public class MobileDAO_Impl implements MobileDAO {
     private static final Logger logger = LoggerFactory.getLogger(MobileDAO_Impl.class);
 
     @Override
-    public Object make_request(String reqUUID, String ctlUID, String lang,String pMap)
+    public Object make_request(String reqUUID, String ctlUID, String lang, String pMap)
             throws JSONException, EpayException, IOException, SQLException {
 
         Map inParams = new HashMap();
@@ -48,7 +48,7 @@ public class MobileDAO_Impl implements MobileDAO {
         inParams.put("pv#lang", lang);
         inParams.put("pv#pMap", pMap);
         Gson gson = new Gson();
-        logger.warn("request -- {}",gson.toJson(inParams));
+        logger.warn("request -- {}", gson.toJson(inParams));
 
         this.func = new SimpleJdbcCall(jdbcTemplate).withCatalogName(pkgName).withFunctionName("do_request")
                 .withoutProcedureColumnMetaDataAccess()
@@ -65,32 +65,38 @@ public class MobileDAO_Impl implements MobileDAO {
                 .declareParameters(new SqlOutParameter("ov#errObj", Types.VARCHAR));
 
         this.func.setReturnValueRequired(false);
-        Map m = func.execute(inParams);
+        try {
+            Map m = func.execute(inParams);
 
-        if (Integer.parseInt(m.get("result").toString()) != 1) {
-            logger.warn("error -- {}",gson.toJson(m.get("ov#errObj")));
-            throw new EpayException(new JSONObject(m.get("ov#errObj").toString()));
+
+            if (Integer.parseInt(m.get("result").toString()) != 1) {
+                logger.warn("error -- {}", gson.toJson(m.get("ov#errObj")));
+                throw new EpayException(new JSONObject(m.get("ov#errObj").toString()));
+            }
+            ;
+
+
+            if (m.get("clob#items") == null) {
+                return new JSONObject("{}");
+            }
+
+            Reader in = ((Clob) m.get("clob#items")).getCharacterStream();
+            StringWriter w = new StringWriter();
+            IOUtils.copy(in, w);
+
+            String result = w.toString();
+            if (result.startsWith("[")) {
+                JSONArray jsonArray = new JSONArray(result);
+                return jsonArray;
+            }
+
+            JSONObject jsonObject = new JSONObject(w.toString());
+            logger.warn("response -- {}", gson.toJson(jsonObject));
+            return jsonObject;
+        } catch (Exception e) {
+            logger.warn("SQL ERROR {}", gson.toJson(e));
         }
-        ;
-
-        
-        if(m.get("clob#items") == null){
-            return new JSONObject("{}");
-        }
-
-        Reader in = ((Clob) m.get("clob#items")).getCharacterStream();
-        StringWriter w = new StringWriter();
-        IOUtils.copy(in, w);
-
-        String result = w.toString();
-        if (result.startsWith("[")) {
-            JSONArray jsonArray = new JSONArray(result);
-            return jsonArray;
-        }
-
-        JSONObject jsonObject = new JSONObject(w.toString());
-        logger.warn("response -- {}",gson.toJson(jsonObject));
-        return jsonObject;
+        return  null;
     }
 
 
