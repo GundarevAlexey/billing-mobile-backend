@@ -60,7 +60,7 @@ private static final Logger logger = LoggerFactory.getLogger(PayController.class
             return do_request(keys.get(0) , keys.get(1), requestContext);
 
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }

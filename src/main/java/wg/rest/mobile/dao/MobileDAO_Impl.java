@@ -93,10 +93,12 @@ public class MobileDAO_Impl implements MobileDAO {
             JSONObject jsonObject = new JSONObject(w.toString());
             logger.warn("response -- {}", gson.toJson(jsonObject));
             return jsonObject;
+        } catch (EpayException e) {
+            throw new EpayException(e.getErrObj());
         } catch (Exception e) {
             logger.warn("SQL ERROR {}", gson.toJson(e));
         }
-        return  null;
+        return null;
     }
 
 
