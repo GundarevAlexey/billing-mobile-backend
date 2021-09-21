@@ -17,6 +17,10 @@ public class EpayException  extends RuntimeException{
     }
 
     public JSONObject getErrObj() {
+        try {
+            errObj.put("fil","");
+        }catch (Exception e){  }
+
         return errObj;
     }
 }
