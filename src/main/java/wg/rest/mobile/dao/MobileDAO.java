@@ -14,4 +14,6 @@ public interface MobileDAO {
 
     Object make_request(String reqUUID, String ctlUID, String lang, String pMap)
             throws JSONException, EpayException, IOException, SQLException;
+    Object getArchivedPayments(String reqUUID, String ctlUID, String lang, String pMap)
+            throws JSONException, EpayException, IOException, SQLException;
 }
