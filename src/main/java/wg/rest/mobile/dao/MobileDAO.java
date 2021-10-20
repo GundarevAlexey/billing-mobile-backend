@@ -1,5 +1,6 @@
 package wg.rest.mobile.dao;
 
+import com.google.gson.Gson;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import wg.rest.mobile.expt.EpayException;
@@ -16,4 +17,5 @@ public interface MobileDAO {
             throws JSONException, EpayException, IOException, SQLException;
     Object getArchivedPayments(String reqUUID, String ctlUID, String lang, String pMap)
             throws JSONException, EpayException, IOException, SQLException;
+    void paymentInspector(String pid, String pay_id, String payment_data, String type );
 }

@@ -146,5 +146,20 @@ public class MobileDAO_Impl implements MobileDAO {
         return null;
     }
 
+    @Override
+    public void paymentInspector(String pid, String aacc, String payment_data, String type) {
+
+        Gson gson = new Gson();
+        String sql = "INSERT  INTO inspector_payments(pid,aacc,payment_data,type)" +
+                "VALUES("+pid+","+aacc+",'"+payment_data.toString()+"','"+type+"')";
+
+
+        try {
+             archiveJdbcTemplate.execute(sql);
+        } catch (Exception e) {
+            logger.warn("SQL ERROR {}", gson.toJson(e));
+        }
+    }
+
 
 }
