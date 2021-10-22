@@ -4,10 +4,10 @@
 
     <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_DIR}/mobile.log</file>
-        <encoder
-                class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <Pattern>%d %p %C{1.} [%t] %m%n</Pattern>
-        </encoder>
+<!--        <encoder-->
+<!--                class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">-->
+<!--            <Pattern>%d %p %C{1.} [%t] %m%n</Pattern>-->
+<!--        </encoder>-->
 
         <rollingPolicy
                 class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -19,6 +19,7 @@
                 <maxFileSize>10MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
     </appender>
     <appender name="error-file" class="ch.qos.logback.core.FileAppender">
         <file>${LOG_DIR}/epay.error.log</file>

@@ -136,6 +136,8 @@ dependencies {
     implementation group: 'org.apache.ws.xmlschema', name: 'xmlschema-core', version: '2.2.5'
     implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.1'
 
+    implementation group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '6.6'
+
 }
 
 compileJava.dependsOn 'genJaxb'
