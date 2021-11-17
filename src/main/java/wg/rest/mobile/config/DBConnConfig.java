@@ -52,7 +52,7 @@ public class DBConnConfig {
     @Bean(name = "dataSource1", destroyMethod = "close")
     public DataSource oracleDataSource() throws SQLException {
 
-        HikariConfig config = new HikariConfig();
+      HikariConfig config = new HikariConfig();
         config.setJdbcUrl(env.getProperty("db.url"));
         config.setUsername(env.getProperty("db.username"));
         config.setPassword(env.getProperty("db.pswd"));
@@ -65,6 +65,13 @@ public class DBConnConfig {
         config.setConnectionTestQuery("select 1 from dual");
         config.setConnectionTimeout(20000);
         config.setLeakDetectionThreshold(TimeUnit.SECONDS.toMillis(30));
+        config.addDataSourceProperty("autoReconnect",true);
+        config.addDataSourceProperty("maxReconnects",5);
+        config.addDataSourceProperty("cachePrepStmts", true);
+        config.addDataSourceProperty("prepStmtCacheSize", 250);
+        config.addDataSourceProperty("prepStmtCacheSqlLimit", 2048);
+        config.addDataSourceProperty("useServerPrepStmts", true);
+        config.addDataSourceProperty("cacheResultSetMetadata", true);
 
         HikariDataSource ds = new HikariDataSource(config);
 //        ds.addDataSourceProperty("driverType", "thin");
