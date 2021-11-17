@@ -22,10 +22,7 @@ import java.io.StringWriter;
 import java.sql.Clob;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by BigMan on 28.02.2019.
@@ -47,6 +44,7 @@ public class MobileDAO_Impl implements MobileDAO {
     @Override
     public Object make_request(String reqUUID, String ctlUID, String lang, String pMap)
             throws JSONException, EpayException, IOException, SQLException {
+        String uuid = UUID.randomUUID().toString();
 
         Map inParams = new HashMap();
         inParams.put("pv#reqUUID", reqUUID);
@@ -54,7 +52,7 @@ public class MobileDAO_Impl implements MobileDAO {
         inParams.put("pv#lang", lang);
         inParams.put("pv#pMap", pMap);
         Gson gson = new Gson();
-        logger.warn("request -- {}", gson.toJson(inParams));
+        logger.warn("request -- " + uuid + " {}", gson.toJson(inParams));
 
         this.func = new SimpleJdbcCall(jdbcTemplate).withCatalogName(pkgName).withFunctionName("do_request")
                 .withoutProcedureColumnMetaDataAccess()
@@ -76,7 +74,7 @@ public class MobileDAO_Impl implements MobileDAO {
 
 
             if (Integer.parseInt(m.get("result").toString()) != 1) {
-                logger.warn("error -- {}", gson.toJson(m.get("ov#errObj")));
+                logger.warn("error -- " + uuid + " {}", gson.toJson(m.get("ov#errObj")));
                 throw new EpayException(new JSONObject(m.get("ov#errObj").toString()));
             }
 
@@ -96,12 +94,12 @@ public class MobileDAO_Impl implements MobileDAO {
             }
 
             JSONObject jsonObject = new JSONObject(w.toString());
-            logger.warn("response -- {}", gson.toJson(jsonObject));
+            logger.warn("response -- " + uuid + " {}", gson.toJson(jsonObject));
             return jsonObject;
         } catch (EpayException e) {
             throw new EpayException(e.getErrObj());
         } catch (Exception e) {
-            logger.warn("SQL ERROR {}", gson.toJson(e));
+            logger.warn("SQL ERROR " + uuid + " {}", gson.toJson(e));
         }
         return null;
     }

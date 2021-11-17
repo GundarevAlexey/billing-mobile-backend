@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import wg.rest.mobile.dao.MobileDAO_Impl;
 
 import java.util.Date;
+import java.util.UUID;
 
 @Service
 public class UpayService {
@@ -21,7 +22,8 @@ public class UpayService {
     Gson gson = new Gson();
 
     public PrepaymentResponse prepaymentResponse(Prepayment data) {
-        logger.warn("request -- {}", gson.toJson(data));
+        String uuid = UUID.randomUUID().toString();
+        logger.warn("request -- " + uuid + " {}", gson.toJson(data));
         Prepayment.PrepaymentRequest request = data.getPrepaymentRequest();
 
         Prepayment prepayment  = new Prepayment();
@@ -41,18 +43,19 @@ public class UpayService {
         ObjectFactory obj = new ObjectFactory();
         PrepaymentResponse prepaymentResponse = client.prepayment(UpayConst.WSDL_URL, obj.createPrepayment(prepayment));
 
-        logger.warn("response -- {}", gson.toJson(prepaymentResponse));
+        logger.warn("response -- " + uuid + " {}", gson.toJson(prepaymentResponse));
         return prepaymentResponse;
 
     }
 
     public ConfirmPaymentResponse confirmPaymentResponse(ConfirmPayment confirmPayment) {
-        logger.warn("request -- {}", gson.toJson(confirmPayment));
+        String uuid = UUID.randomUUID().toString();
+        logger.warn("request -- " + uuid + " {}", gson.toJson(confirmPayment));
         confirmPayment.getConfirmPaymentRequest().setStPimsApiPartnerKey(UpayConst.KEY);
 
         ObjectFactory obj = new ObjectFactory();
         ConfirmPaymentResponse confirmPaymentResponse = client.confirmPayment(UpayConst.WSDL_URL, obj.createConfirmPayment(confirmPayment));
-        logger.warn("response -- {}", gson.toJson(confirmPaymentResponse));
+        logger.warn("response -- " + uuid + " {}", gson.toJson(confirmPaymentResponse));
         return confirmPaymentResponse;
 
     }
