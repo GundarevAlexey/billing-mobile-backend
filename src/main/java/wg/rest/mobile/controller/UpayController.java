@@ -33,6 +33,10 @@ public class UpayController {
     @POST
     @Path("/prepayment")
     public Response prepayment(@RequestBody Prepayment request){
+        try {
+            request.getPrepaymentRequest().setPaymentAmount(request.getPrepaymentRequest().getPaymentAmount().replaceAll(" ", ""));
+        } catch (Exception e) {}
+
         PrepaymentResponse prepaymentResponse = service.prepaymentResponse(request);
 
         HashMap<String, Object> body = new HashMap<>();
