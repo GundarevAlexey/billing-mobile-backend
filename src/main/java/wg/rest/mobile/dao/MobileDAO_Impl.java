@@ -19,9 +19,7 @@ import wg.rest.mobile.expt.EpayException;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringWriter;
-import java.sql.Clob;
-import java.sql.SQLException;
-import java.sql.Types;
+import java.sql.*;
 import java.util.*;
 
 /**
@@ -148,12 +146,16 @@ public class MobileDAO_Impl implements MobileDAO {
     public void paymentInspector(String pid, String aacc, String payment_data, String type) {
 
         Gson gson = new Gson();
-        String sql = "INSERT  INTO inspector_payments(pid,aacc,payment_data,type)" +
-                "VALUES("+pid+","+aacc+",'"+payment_data.toString()+"','"+type+"')";
-
+        String sql = "INSERT INTO inspector_payments(pid,aacc,payment_data,type) VALUES(?,?,?,?)";
 
         try {
-             archiveJdbcTemplate.execute(sql);
+            PreparedStatement stmt = archiveJdbcTemplate.getDataSource().getConnection().prepareStatement(sql);
+            stmt.setString(1, pid);
+            stmt.setString(2, aacc);
+            stmt.setString(3, payment_data);
+            stmt.setString(4, type);
+            boolean results = stmt.execute();
+            archiveJdbcTemplate.execute(sql);
         } catch (Exception e) {
             logger.warn("SQL ERROR {}", gson.toJson(e));
         }
