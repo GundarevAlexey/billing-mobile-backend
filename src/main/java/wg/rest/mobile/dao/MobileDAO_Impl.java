@@ -35,8 +35,6 @@ public class MobileDAO_Impl implements MobileDAO {
     @Qualifier("archive_jdbc")
     private JdbcTemplate archiveJdbcTemplate;
 
-    private SimpleJdbcCall func;
-
     private static final Logger logger = LoggerFactory.getLogger(MobileDAO_Impl.class);
 
     @Override
@@ -52,7 +50,7 @@ public class MobileDAO_Impl implements MobileDAO {
         Gson gson = new Gson();
         logger.warn("request -- " + uuid + " {}", gson.toJson(inParams));
 
-        this.func = new SimpleJdbcCall(jdbcTemplate).withCatalogName(pkgName).withFunctionName("do_request")
+        SimpleJdbcCall func = new SimpleJdbcCall(jdbcTemplate).withCatalogName(pkgName).withFunctionName("do_request")
                 .withoutProcedureColumnMetaDataAccess()
                 .useInParameterNames("pv#reqUUID")
                 .useInParameterNames("pv#ctlUID")
@@ -66,7 +64,7 @@ public class MobileDAO_Impl implements MobileDAO {
                 .declareParameters(new SqlOutParameter("clob#items", Types.CLOB))
                 .declareParameters(new SqlOutParameter("ov#errObj", Types.VARCHAR));
 
-        this.func.setReturnValueRequired(false);
+        func.setReturnValueRequired(false);
         try {
             Map m = func.execute(inParams);
 
@@ -126,6 +124,7 @@ public class MobileDAO_Impl implements MobileDAO {
                     rows = archiveJdbcTemplate.queryForList(sql);
                 } catch (Exception e) {
                     e.printStackTrace();
+                    logger.warn("psql ERROR {}", gson.toJson(e));
                 }
 
                 jsonObject.put("old_data", rows);
@@ -145,8 +144,17 @@ public class MobileDAO_Impl implements MobileDAO {
     @Override
     public void paymentInspector(String pid, String aacc, String payment_data, String type) {
 
+        String uuid = UUID.randomUUID().toString();
         Gson gson = new Gson();
         String sql = "INSERT INTO inspector_payments(pid,aacc,payment_data,type) VALUES(?,?,?,?)";
+
+        Map<String, Object> inParams = new HashMap<>();
+        inParams.put("pid", pid);
+        inParams.put("aacc", aacc);
+        inParams.put("payment_data", payment_data);
+        inParams.put("type", type);
+
+        logger.warn("request -- " + uuid + " {}", gson.toJson(inParams));
 
         try {
             PreparedStatement stmt = archiveJdbcTemplate.getDataSource().getConnection().prepareStatement(sql);
@@ -155,9 +163,8 @@ public class MobileDAO_Impl implements MobileDAO {
             stmt.setString(3, payment_data);
             stmt.setString(4, type);
             boolean results = stmt.execute();
-            archiveJdbcTemplate.execute(sql);
         } catch (Exception e) {
-            logger.warn("SQL ERROR {}", gson.toJson(e));
+            logger.warn("SQL ERROR " + uuid + " {}", gson.toJson(e));
         }
     }
 
