@@ -94,7 +94,14 @@ public class DBConnConfig {
         config.setMaximumPoolSize(Integer.parseInt(env.getProperty("spring.datasource.hikari.maximum-pool-size")));
 //        config.setConnectionTestQuery("select 1 from dual");
         config.setConnectionTimeout(20000);
-        config.setLeakDetectionThreshold(TimeUnit.SECONDS.toMillis(30));
+        config.setLeakDetectionThreshold(TimeUnit.SECONDS.toMillis(60));
+        config.addDataSourceProperty("autoReconnect",true);
+        config.addDataSourceProperty("maxReconnects",5);
+        config.addDataSourceProperty("cachePrepStmts", true);
+        config.addDataSourceProperty("prepStmtCacheSize", 250);
+        config.addDataSourceProperty("prepStmtCacheSqlLimit", 2048);
+        config.addDataSourceProperty("useServerPrepStmts", true);
+        config.addDataSourceProperty("cacheResultSetMetadata", true);
 
         HikariDataSource ds = new HikariDataSource(config);
 //        ds.addDataSourceProperty("driverType", "thin");
