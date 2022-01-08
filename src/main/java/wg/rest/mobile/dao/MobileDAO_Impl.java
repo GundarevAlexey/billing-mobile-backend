@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
@@ -157,12 +158,7 @@ public class MobileDAO_Impl implements MobileDAO {
         logger.warn("request -- " + uuid + " {}", gson.toJson(inParams));
 
         try {
-            PreparedStatement stmt = archiveJdbcTemplate.getDataSource().getConnection().prepareStatement(sql);
-            stmt.setString(1, pid);
-            stmt.setString(2, aacc);
-            stmt.setString(3, payment_data);
-            stmt.setString(4, type);
-            boolean results = stmt.execute();
+            archiveJdbcTemplate.update(sql, pid, aacc, payment_data, type);
         } catch (Exception e) {
             logger.warn("SQL ERROR " + uuid + " {}", gson.toJson(e));
         }
